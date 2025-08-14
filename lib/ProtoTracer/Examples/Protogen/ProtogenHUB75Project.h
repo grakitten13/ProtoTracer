@@ -20,7 +20,8 @@ private:
     GamecubeSequence gamecube = GamecubeSequence(Vector2D(192.0f, 192.0f), Vector2D(96.0f, 48.0f), 18.0f);
 
     
-	const __FlashStringHelper* faceArray[12] = {F("DEFAULT"), F("ANGRY"), F("DOUBT"), F("FROWN"), F("LOOKUP"), F("SAD"), F("AUDIO1"), F("AUDIO2"), F("AUDIO3"), F("owo"), F("eye")};
+	const __FlashStringHelper* faceArray[] = {F("DEFAULT"), F("ANGRY"), F("DOUBT"), F("FROWN"), F("LOOKUP"), F("SAD"), F("AUDIO1"), F("AUDIO2"), F("AUDIO3"), F("owo"), F("eye")};
+	const uint8_t FACE_COUNT = sizeof(faceArray) / sizeof(faceArray[0]);
 
     void LinkControlParameters() override {//Called from parent
         AddParameter(NukudeFace::Anger, pM.GetMorphWeightReference(NukudeFace::Anger), 15);
@@ -149,7 +150,7 @@ private:
     AddMaterialFrame(Color::CRAINBOW);
    }
 public:
-    ProtogenHUB75Project() : ProtogenProject(&cameras, &controller, 2, Vector2D(), Vector2D(192.0f, 94.0f), 21, 22, 9){
+    ProtogenHUB75Project() : ProtogenProject(&cameras, &controller, 2, Vector2D(), Vector2D(192.0f, 94.0f), 21, 22, FACE_COUNT){
         scene.AddObject(pM.GetObject());
         scene.AddObject(tM.GetObject());
         scene.AddObject(deltaDisplayBackground.GetObject());
