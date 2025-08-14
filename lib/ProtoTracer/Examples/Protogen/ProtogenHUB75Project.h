@@ -55,38 +55,70 @@ private:
         AddViseme(Viseme::MouthShape::SS, tM.GetMorphWeightReference(BetaFront::vrc_v_ss));
     }
 
-    void Default(){}
+    void Default(){
+        // Show NukudeFace, hide BetaFront
+        pM.GetObject()->Enable();
+        tM.GetObject()->Disable();
+    }
 
     void Angry(){
+        // Show NukudeFace, hide BetaFront
+        pM.GetObject()->Enable();
+        tM.GetObject()->Disable();
+        
         AddParameterFrame(NukudeFace::Anger, 1.0f);
         AddMaterialFrame(Color::CRED);
     } 
 
     void Sad(){
+        // Show NukudeFace, hide BetaFront
+        pM.GetObject()->Enable();
+        tM.GetObject()->Disable();
+        
         AddParameterFrame(NukudeFace::Sadness, 1.0f);
         AddParameterFrame(NukudeFace::Frown, 1.0f);
         AddMaterialFrame(Color::CBLUE);
     }
 
     void Surprised(){
+        // Show NukudeFace, hide BetaFront
+        pM.GetObject()->Enable();
+        tM.GetObject()->Disable();
+        
         AddParameterFrame(NukudeFace::Surprised, 1.0f);
         AddParameterFrame(NukudeFace::HideBlush, 0.0f);
         AddMaterialFrame(Color::CRAINBOW);
     }
     
     void Doubt(){
+        // Show NukudeFace, hide BetaFront
+        pM.GetObject()->Enable();
+        tM.GetObject()->Disable();
+        
         AddParameterFrame(NukudeFace::Doubt, 1.0f);
     }
     
     void Frown(){
+        // Show NukudeFace, hide BetaFront
+        pM.GetObject()->Enable();
+        tM.GetObject()->Disable();
+        
         AddParameterFrame(NukudeFace::Frown, 1.0f);
     }
 
     void LookUp(){
+        // Show NukudeFace, hide BetaFront
+        pM.GetObject()->Enable();
+        tM.GetObject()->Disable();
+        
         AddParameterFrame(NukudeFace::LookUp, 1.0f);
     }
 
     void LookDown(){
+        // Show NukudeFace, hide BetaFront
+        pM.GetObject()->Enable();
+        tM.GetObject()->Disable();
+        
         AddParameterFrame(NukudeFace::LookDown, 1.0f);
     }
 
@@ -107,6 +139,11 @@ private:
    }
 
    void owo() {
+    // Hide the NukudeFace and show BetaFront
+    pM.GetObject()->Disable();
+    tM.GetObject()->Enable();
+    
+    // Show BetaFront features
     AddParameterFrame(BetaFront::CircleEye, 1.0f);
     AddParameterFrame(BetaFront::OwOMouth, 1.0f);
     AddMaterialFrame(Color::CRAINBOW);
@@ -120,6 +157,10 @@ public:
         pM.GetObject()->SetMaterial(GetFaceMaterial());
         tM.GetObject()->SetMaterial(GetFaceMaterial());
         deltaDisplayBackground.GetObject()->SetMaterial(GetFaceMaterial());
+
+        // Initialize face visibility - show NukudeFace by default, hide BetaFront
+        pM.GetObject()->Enable();
+        tM.GetObject()->Disable();
 
         hud.SetFaceArray(faceArray);
 
