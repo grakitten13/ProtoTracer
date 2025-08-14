@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../../Animation/ImageSequence.h"
+#include "Utils/ImageSequence.h"
 
 class OrbSequence : public ImageSequence{
 private:
@@ -59,7 +59,7 @@ private:
 
 	static const uint8_t rgbColors[];
 
-	Image image = Image(frame0000, rgbColors, 220, 165, 256);
+	Image image = Image(frame0000, rgbColors, 220, 165, 255);
 
 public:
 	OrbSequence(Vector2D size, Vector2D offset, float fps) : ImageSequence(&image, sequence, (unsigned int)50, fps) {

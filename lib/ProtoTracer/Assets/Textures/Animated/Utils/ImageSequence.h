@@ -94,10 +94,10 @@ public:
     /**
      * @brief Retrieves the RGB color at a specified intersection point.
      *
-     * @param intersection The intersection point in 3D space.
+     * @param position The intersection point in 3D space.
      * @param normal The surface normal at the intersection point.
      * @param uvw The UVW coordinates for texture mapping.
      * @return An RGBColor object representing the color at the specified point.
      */
-    RGBColor GetRGB(Vector3D intersection, Vector3D normal, Vector3D uvw);
+    RGBColor GetRGB(const Vector3D& position, const Vector3D& normal, const Vector3D& uvw) override;
 };

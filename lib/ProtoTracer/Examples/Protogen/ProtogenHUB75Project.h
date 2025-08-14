@@ -3,6 +3,8 @@
 #include "../Templates/ProtogenProjectTemplate.h"
 #include "../../Assets/Models/OBJ/DeltaDisplayBackground.h"
 #include "../../Assets/Models/FBX/NukudeFlat.h"
+#include "../../Assets/Models/FBX/BetaFront.h"
+#include "../../Assets/Textures/Animated/Gamecube.h"
 
 #include "../../Camera/CameraManager/Implementations/HUB75DeltaCameras.h"
 #include "../../Controller/HUB75Controller.h"
@@ -12,9 +14,13 @@ private:
     HUB75DeltaCameraManager cameras;
     HUB75Controller controller = HUB75Controller(&cameras, 50, 50);
     NukudeFace pM;
-    DeltaDisplayBackground deltaDisplayBackground;
+    BetaFront tM;
     
-	const __FlashStringHelper* faceArray[10] = {F("DEFAULT"), F("ANGRY"), F("DOUBT"), F("FROWN"), F("LOOKUP"), F("SAD"), F("AUDIO1"), F("AUDIO2"), F("AUDIO3")};
+    DeltaDisplayBackground deltaDisplayBackground;
+    GamecubeSequence gamecube = GamecubeSequence(Vector2D(192.0f, 192.0f), Vector2D(96.0f, 48.0f), 18.0f);
+
+    
+	const __FlashStringHelper* faceArray[12] = {F("DEFAULT"), F("ANGRY"), F("DOUBT"), F("FROWN"), F("LOOKUP"), F("SAD"), F("AUDIO1"), F("AUDIO2"), F("AUDIO3"), F("owo"), F("eye")};
 
     void LinkControlParameters() override {//Called from parent
         AddParameter(NukudeFace::Anger, pM.GetMorphWeightReference(NukudeFace::Anger), 15);
@@ -36,6 +42,17 @@ private:
         AddViseme(Viseme::MouthShape::SS, pM.GetMorphWeightReference(NukudeFace::vrc_v_ss));
 
         AddBlinkParameter(pM.GetMorphWeightReference(NukudeFace::Blink));
+
+        AddParameter(BetaFront::OwOMouth, tM.GetMorphWeightReference(BetaFront::OwOMouth), 15);
+        AddParameter(BetaFront::CircleEye, tM.GetMorphWeightReference(BetaFront::CircleEye), 15);
+
+        AddViseme(Viseme::MouthShape::EE, tM.GetMorphWeightReference(BetaFront::vrc_v_ee));
+        AddViseme(Viseme::MouthShape::AH, tM.GetMorphWeightReference(BetaFront::vrc_v_aa));
+        AddViseme(Viseme::MouthShape::UH, tM.GetMorphWeightReference(BetaFront::vrc_v_dd));
+        AddViseme(Viseme::MouthShape::AR, tM.GetMorphWeightReference(BetaFront::vrc_v_rr));
+        AddViseme(Viseme::MouthShape::ER, tM.GetMorphWeightReference(BetaFront::vrc_v_ch));
+        AddViseme(Viseme::MouthShape::OO, tM.GetMorphWeightReference(BetaFront::vrc_v_oh));
+        AddViseme(Viseme::MouthShape::SS, tM.GetMorphWeightReference(BetaFront::vrc_v_ss));
     }
 
     void Default(){}
@@ -85,17 +102,30 @@ private:
         AddMaterialFrame(Color::CHORIZONTALRAINBOW, 0.8f);
     }
 
+   void GamecubeFace(){
+       AddMaterialFrame(gamecube, 1.0f);
+   }
+
+   void owo() {
+    AddParameterFrame(BetaFront::CircleEye, 1.0f);
+    AddParameterFrame(BetaFront::OwOMouth, 1.0f);
+    AddMaterialFrame(Color::CRAINBOW);
+   }
 public:
-    ProtogenHUB75Project() : ProtogenProject(&cameras, &controller, 2, Vector2D(), Vector2D(192.0f, 94.0f), 22, 23, 9){
+    ProtogenHUB75Project() : ProtogenProject(&cameras, &controller, 2, Vector2D(), Vector2D(192.0f, 94.0f), 21, 22, 9){
         scene.AddObject(pM.GetObject());
+        scene.AddObject(tM.GetObject());
         scene.AddObject(deltaDisplayBackground.GetObject());
 
         pM.GetObject()->SetMaterial(GetFaceMaterial());
+        tM.GetObject()->SetMaterial(GetFaceMaterial());
         deltaDisplayBackground.GetObject()->SetMaterial(GetFaceMaterial());
 
         hud.SetFaceArray(faceArray);
 
         LinkControlParameters();
+        AddMaterial(Material::Replace, &gamecube, 20, 0.0f, 1.0f);
+
         
         SetWiggleSpeed(5.0f);
         SetMenuWiggleSpeed(0.0f, 0.0f, 0.0f);
@@ -105,6 +135,7 @@ public:
 
     void Update(float ratio) override {
         pM.Reset();
+        tM.Reset();
 
         uint8_t mode = Menu::GetFaceState();//change by button press
 
@@ -119,12 +150,19 @@ public:
 
         UpdateFace(ratio);
 
+        gamecube.Update();
+
         pM.Update();
+        tM.Update();
 
         AlignObjectFace(pM.GetObject(), -7.5f);
+        AlignObjectFace(tM.GetObject(), -7.5f);
 
         pM.GetObject()->GetTransform()->SetPosition(GetWiggleOffset());
         pM.GetObject()->UpdateTransform();
+
+        tM.GetObject()->GetTransform()->SetPosition(GetWiggleOffset());
+        tM.GetObject()->UpdateTransform();
     }
 
     void SelectFace(uint8_t code) {
@@ -134,7 +172,7 @@ public:
         }
 
         switch(code) {
-            case 0: Default();  break;
+            case 0: owo();  break;
             case 1: Angry();    break;
             case 2: Doubt();    break;
             case 3: Frown();    break;
@@ -142,6 +180,8 @@ public:
             case 5: Sad();      break;
             case 6: AudioReactiveGradientFace();    break;
             case 7: OscilloscopeFace();             break;
+            case 8: GamecubeFace();                 break;
+            case 9: owo();                 break;
             default: SpectrumAnalyzerFace();        break;
         }
     }
