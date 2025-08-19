@@ -20,7 +20,7 @@ private:
     GamecubeSequence gamecube = GamecubeSequence(Vector2D(192.0f, 192.0f), Vector2D(96.0f, 48.0f), 18.0f);
 
     
-	const __FlashStringHelper* faceArray[12] = {F("DEFAULT"), F("ANGRY"), F("DOUBT"), F("FROWN"), F("LOOKUP"), F("SAD"), F("AUDIO1"), F("AUDIO2"), F("AUDIO3"), F("owo"), F("eye")};
+	const __FlashStringHelper* faceArray[11] = {F("DEFAULT"), F("ANGRY"), F("DOUBT"), F("FROWN"), F("LOOKUP"), F("SAD"), F("AUDIO1"), F("AUDIO2"), F("AUDIO3"), F("owo"), F("eye")};
 
     void LinkControlParameters() override {//Called from parent
         AddParameter(NukudeFace::Anger, pM.GetMorphWeightReference(NukudeFace::Anger), 15);
@@ -33,18 +33,30 @@ private:
 
         AddParameter(NukudeFace::HideBlush, pM.GetMorphWeightReference(NukudeFace::HideBlush), 15, IEasyEaseAnimator::InterpolationMethod::Cosine, true);
 
-        AddViseme(Viseme::MouthShape::EE, pM.GetMorphWeightReference(NukudeFace::vrc_v_ee));
-        AddViseme(Viseme::MouthShape::AH, pM.GetMorphWeightReference(NukudeFace::vrc_v_aa));
-        AddViseme(Viseme::MouthShape::UH, pM.GetMorphWeightReference(NukudeFace::vrc_v_dd));
-        AddViseme(Viseme::MouthShape::AR, pM.GetMorphWeightReference(NukudeFace::vrc_v_rr));
-        AddViseme(Viseme::MouthShape::ER, pM.GetMorphWeightReference(NukudeFace::vrc_v_ch));
-        AddViseme(Viseme::MouthShape::OO, pM.GetMorphWeightReference(NukudeFace::vrc_v_oh));
-        AddViseme(Viseme::MouthShape::SS, pM.GetMorphWeightReference(NukudeFace::vrc_v_ss));
+        // AddViseme(Viseme::MouthShape::EE, pM.GetMorphWeightReference(NukudeFace::vrc_v_ee));
+        // AddViseme(Viseme::MouthShape::AH, pM.GetMorphWeightReference(NukudeFace::vrc_v_aa));
+        // AddViseme(Viseme::MouthShape::UH, pM.GetMorphWeightReference(NukudeFace::vrc_v_dd));
+        // AddViseme(Viseme::MouthShape::AR, pM.GetMorphWeightReference(NukudeFace::vrc_v_rr));
+        // AddViseme(Viseme::MouthShape::ER, pM.GetMorphWeightReference(NukudeFace::vrc_v_ch));
+        // AddViseme(Viseme::MouthShape::OO, pM.GetMorphWeightReference(NukudeFace::vrc_v_oh));
+        // AddViseme(Viseme::MouthShape::SS, pM.GetMorphWeightReference(NukudeFace::vrc_v_ss));
 
         AddBlinkParameter(pM.GetMorphWeightReference(NukudeFace::Blink));
 
-        AddParameter(BetaFront::OwOMouth, tM.GetMorphWeightReference(BetaFront::OwOMouth), 15);
-        AddParameter(BetaFront::CircleEye, tM.GetMorphWeightReference(BetaFront::CircleEye), 15);
+        AddParameter(BetaFront::BlushEye, tM.GetMorphWeightReference(BetaFront::BlushEye), 40);
+        AddParameter(BetaFront::HideBlush, tM.GetMorphWeightReference(BetaFront::HideBlush), 10, IEasyEaseAnimator::InterpolationMethod::Cosine, true);
+        AddParameter(BetaFront::HideEyeBrow, tM.GetMorphWeightReference(BetaFront::HideEyeBrow), 10, IEasyEaseAnimator::InterpolationMethod::Cosine);
+        AddParameter(BetaFront::HideSecondEye, tM.GetMorphWeightReference(BetaFront::HideSecondEye), 10, IEasyEaseAnimator::InterpolationMethod::Cosine);
+        AddParameter(BetaFront::OwOMouth, tM.GetMorphWeightReference(BetaFront::OwOMouth), 60);
+        AddParameter(BetaFront::SadEye, tM.GetMorphWeightReference(BetaFront::SadEye), 70, IEasyEaseAnimator::InterpolationMethod::Cosine);
+        AddParameter(BetaFront::SadEyeBrow, tM.GetMorphWeightReference(BetaFront::SadEyeBrow), 80, IEasyEaseAnimator::InterpolationMethod::Cosine);
+        AddParameter(BetaFront::SadMouth, tM.GetMorphWeightReference(BetaFront::SadMouth), 90, IEasyEaseAnimator::InterpolationMethod::Cosine);
+        AddParameter(BetaFront::FlatMouth, tM.GetMorphWeightReference(BetaFront::FlatMouth), 50);
+        AddParameter(BetaFront::DeadEye, tM.GetMorphWeightReference(BetaFront::DeadEye), 1);
+        AddParameter(BetaFront::HeartEye, tM.GetMorphWeightReference(BetaFront::HeartEye), 30);
+        AddParameter(BetaFront::AlphaGenCircle,tM.GetMorphWeightReference(BetaFront::AlphaGenCircle),  90, IEasyEaseAnimator::InterpolationMethod::Cosine);
+        AddParameter(BetaFront::HideAll,tM.GetMorphWeightReference(BetaFront::HideAll),  90);
+        AddParameter(BetaFront::AngryEyeMouth,tM.GetMorphWeightReference(BetaFront::AngryEyeMouth),  30);
 
         AddViseme(Viseme::MouthShape::EE, tM.GetMorphWeightReference(BetaFront::vrc_v_ee));
         AddViseme(Viseme::MouthShape::AH, tM.GetMorphWeightReference(BetaFront::vrc_v_aa));
@@ -63,17 +75,23 @@ private:
 
     void Angry(){
         // Show NukudeFace, hide BetaFront
-        pM.GetObject()->Enable();
-        tM.GetObject()->Disable();
-        
-        AddParameterFrame(NukudeFace::Anger, 1.0f);
-        AddMaterialFrame(Color::CRED);
+        pM.GetObject()->Disable();
+        tM.GetObject()->Enable();
+
+        DisableBlinking();
+        AddParameterFrame(BetaFront::BlushEye, 1.0f);
+        AddParameterFrame(BetaFront::HideBlush, 0.0f);
+        AddParameterFrame(BetaFront::HideEyeBrow, 1.0f);
+        AddParameterFrame(BetaFront::HideSecondEye, 1.0f);
+        AddParameterFrame(BetaFront::OwOMouth, 1.0f);
+        AddMaterialFrame(Color::CRAINBOW, 0.8f);
     } 
 
     void Sad(){
         // Show NukudeFace, hide BetaFront
         pM.GetObject()->Enable();
         tM.GetObject()->Disable();
+        
         
         AddParameterFrame(NukudeFace::Sadness, 1.0f);
         AddParameterFrame(NukudeFace::Frown, 1.0f);
@@ -149,7 +167,7 @@ private:
     AddMaterialFrame(Color::CRAINBOW);
    }
 public:
-    ProtogenHUB75Project() : ProtogenProject(&cameras, &controller, 2, Vector2D(), Vector2D(192.0f, 94.0f), 21, 22, 9){
+    ProtogenHUB75Project() : ProtogenProject(&cameras, &controller, 2, Vector2D(), Vector2D(192.0f, 94.0f), 21, 22, 11){
         scene.AddObject(pM.GetObject());
         scene.AddObject(tM.GetObject());
         scene.AddObject(deltaDisplayBackground.GetObject());
@@ -159,8 +177,8 @@ public:
         deltaDisplayBackground.GetObject()->SetMaterial(GetFaceMaterial());
 
         // Initialize face visibility - show NukudeFace by default, hide BetaFront
-        pM.GetObject()->Enable();
-        tM.GetObject()->Disable();
+        pM.GetObject()->Disable();
+        tM.GetObject()->Enable();
 
         hud.SetFaceArray(faceArray);
 
@@ -202,7 +220,7 @@ public:
         pM.GetObject()->GetTransform()->SetPosition(GetWiggleOffset());
         pM.GetObject()->UpdateTransform();
 
-        tM.GetObject()->GetTransform()->SetPosition(GetWiggleOffset());
+        // tM.GetObject()->GetTransform()->SetPosition(GetWiggleOffset());
         tM.GetObject()->UpdateTransform();
     }
 
