@@ -20,9 +20,7 @@ private:
     GamecubeSequence gamecube = GamecubeSequence(Vector2D(192.0f, 192.0f), Vector2D(96.0f, 48.0f), 18.0f);
 
     
-	const __FlashStringHelper* faceArray[] = {F("DEFAULT"), F("ANGRY"), F("DOUBT"), F("FROWN"), F("LOOKUP"), F("SAD"), F("AUDIO1"), F("AUDIO2"), F("AUDIO3"), F("owo"), F("eye")};
-	const uint8_t FACE_COUNT = sizeof(faceArray) / sizeof(faceArray[0]);
-
+	const __FlashStringHelper* faceArray[11] = {F("DEFAULT"), F("ANGRY"), F("DOUBT"), F("FROWN"), F("LOOKUP"), F("SAD"), F("AUDIO1"), F("AUDIO2"), F("AUDIO3"), F("owo"), F("eye")};
     void LinkControlParameters() override {//Called from parent
         AddParameter(NukudeFace::Anger, pM.GetMorphWeightReference(NukudeFace::Anger), 15);
         AddParameter(NukudeFace::Sadness, pM.GetMorphWeightReference(NukudeFace::Sadness), 15, IEasyEaseAnimator::InterpolationMethod::Cosine);
