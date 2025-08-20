@@ -3,7 +3,7 @@
 #include "../Templates/ProtogenProjectTemplate.h"
 #include "../../Assets/Models/OBJ/DeltaDisplayBackground.h"
 #include "../../Assets/Models/FBX/NukudeFlat.h"
-#include "../../Assets/Models/FBX/BetaFront.h"
+#include "../../Assets/Models/FBX/BetaFront3.h"
 #include "../../Assets/Textures/Animated/Gamecube.h"
 
 #include "../../Camera/CameraManager/Implementations/HUB75DeltaCameras.h"
@@ -42,11 +42,11 @@ private:
 
         AddBlinkParameter(pM.GetMorphWeightReference(NukudeFace::Blink));
 
-        AddParameter(BetaFront::BlushEye, tM.GetMorphWeightReference(BetaFront::BlushEye), 40);
+        AddParameter(BetaFront::BlushEye, tM.GetMorphWeightReference(BetaFront::BlushEye), 40, IEasyEaseAnimator::InterpolationMethod::Cosine);
         AddParameter(BetaFront::HideBlush, tM.GetMorphWeightReference(BetaFront::HideBlush), 10, IEasyEaseAnimator::InterpolationMethod::Cosine, true);
         AddParameter(BetaFront::HideEyeBrow, tM.GetMorphWeightReference(BetaFront::HideEyeBrow), 10, IEasyEaseAnimator::InterpolationMethod::Cosine);
         AddParameter(BetaFront::HideSecondEye, tM.GetMorphWeightReference(BetaFront::HideSecondEye), 10, IEasyEaseAnimator::InterpolationMethod::Cosine);
-        AddParameter(BetaFront::OwOMouth, tM.GetMorphWeightReference(BetaFront::OwOMouth), 60);
+        AddParameter(BetaFront::OwOMouth, tM.GetMorphWeightReference(BetaFront::OwOMouth), 60, IEasyEaseAnimator::InterpolationMethod::Cosine);
         AddParameter(BetaFront::SadEye, tM.GetMorphWeightReference(BetaFront::SadEye), 70, IEasyEaseAnimator::InterpolationMethod::Cosine);
         AddParameter(BetaFront::SadEyeBrow, tM.GetMorphWeightReference(BetaFront::SadEyeBrow), 80, IEasyEaseAnimator::InterpolationMethod::Cosine);
         AddParameter(BetaFront::SadMouth, tM.GetMorphWeightReference(BetaFront::SadMouth), 90, IEasyEaseAnimator::InterpolationMethod::Cosine);
@@ -166,7 +166,7 @@ private:
     AddMaterialFrame(Color::CRAINBOW);
    }
 public:
-    ProtogenHUB75Project() : ProtogenProject(&cameras, &controller, 2, Vector2D(), Vector2D(192.0f, 94.0f), 21, 22, 9){
+    ProtogenHUB75Project() : ProtogenProject(&cameras, &controller, 3, Vector2D(), Vector2D(192.0f, 94.0f), 21, 22, 9){
         scene.AddObject(pM.GetObject());
         scene.AddObject(tM.GetObject());
         scene.AddObject(deltaDisplayBackground.GetObject());
@@ -214,12 +214,12 @@ public:
         tM.Update();
 
         AlignObjectFace(pM.GetObject(), -7.5f);
-        AlignObjectFace(tM.GetObject(), -7.5f);
+        AlignObjectFace(tM.GetObject(), -7.5f, 2.0F, false);
 
         pM.GetObject()->GetTransform()->SetPosition(GetWiggleOffset());
         pM.GetObject()->UpdateTransform();
 
-        // tM.GetObject()->GetTransform()->SetPosition(GetWiggleOffset());
+        tM.GetObject()->GetTransform()->SetPosition(GetWiggleOffset());
         tM.GetObject()->UpdateTransform();
     }
 
